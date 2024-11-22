@@ -16,6 +16,7 @@ spec:
       kind: Rule
       services:
         - name: argocd-server
+          #namespace: argocd
           port: 80
       # Uncomment the following block to add middlewares
       # middlewares:
