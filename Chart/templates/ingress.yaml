@@ -18,8 +18,10 @@ spec:
         - name: argocd-server
           #namespace: argocd
           port: 80
-      # Uncomment the following block to add middlewares
-      # middlewares:
-      #   - name: {{ .Release.Name }}-forward-client-ip
   tls:
     secretName: argocd-itlusions-com-tls
+    domains:
+    - main: argocd.itlusions.com 
+      sans:
+        - argocd.itlusions.nl
+    
