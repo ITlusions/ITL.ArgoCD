@@ -2,21 +2,23 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ .Release.Name }}-ingressroute
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-issuer"
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-issuer"
+    # Uncomment the following lines if using a different ingress controller
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
 spec:
   entryPoints:
     - web
     - websecure
   routes:
-  - match: Host(`argocd.itlusions.com`)
-    kind: Rule
-    services:
-    - name: argocd-server
-      port: 80
-    # middlewares:
-    #   - name: {{ .Release.Name }}-forward-client-ip
+    - match: Host(`argocd.itlusions.com`)
+      kind: Rule
+      services:
+        - name: argocd-server
+          port: 80
+      # Uncomment the following block to add middlewares
+      # middlewares:
+      #   - name: {{ .Release.Name }}-forward-client-ip
   tls:
     secretName: argocd-itlusions-com-tls
