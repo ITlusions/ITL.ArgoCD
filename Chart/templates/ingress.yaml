@@ -10,18 +10,24 @@ metadata:
 spec:
   entryPoints:
     - web
-    - websecure
+    # - websecure
   routes:
     - match: Host(`argocd.itlusions.com`)
       kind: Rule
       services:
         - name: argocd-server
-          #namespace: argocd
+          namespace: argocd
           port: 80
-  tls:
-    secretName: argocd-itlusions-com-tls
-    domains:
-    - main: argocd.itlusions.com 
-      sans:
-        - argocd.itlusions.nl
+    - match: Host(`argocd.itlusions.nl`)
+      kind: Rule
+      services:
+        - name: argocd-server
+          namespace: argocd
+          port: 80
+#   tls:
+#     secretName: argocd-itlusions-com-tls
+#     domains:
+#     - main: argocd.itlusions.com 
+#       sans:
+#         - argocd.itlusions.nl
     
