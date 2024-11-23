@@ -7,7 +7,7 @@ spec:
   issuerRef:
     name: letsencrypt-issuer
     kind: ClusterIssuer
-  commonName: argocd.itlusions.com
+  commonName: argocd.dev.itlusions.com
   dnsNames:
     - argocd.dev.itlusions.nl
     - argocd.dev.itlusions.com
