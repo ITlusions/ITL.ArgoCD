@@ -9,17 +9,17 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`argocd.itlusions.com`)
+    - match: Host(`argocd.dev.itlusions.com`)
       kind: Rule
       services:
         - name: argocd-server
           namespace: argocd
           port: 80
-    - match: Host(`argocd.itlusions.nl`)
+    - match: Host(`argocd.dev.itlusions.nl`)
       kind: Rule
       services:
         - name: argocd-server
           namespace: argocd
           port: 80
   tls:
-    secretName: argocd-itlusions-com-tls
+    secretName: argocd-dev.itlusions-com-tls

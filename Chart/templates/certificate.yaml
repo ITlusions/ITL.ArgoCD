@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: argocd-itlusions-com
+  name: argocd-dev-itlusions-com
 spec:
-  secretName: argocd-itlusions-com-tls
+  secretName: argocd-dev-itlusions-com-tls
   issuerRef:
     name: letsencrypt-issuer
     kind: ClusterIssuer
   commonName: argocd.itlusions.com
   dnsNames:
-    - argocd.itlusions.nl
-    - argocd.itlusions.com
+    - argocd.dev.itlusions.nl
+    - argocd.dev.itlusions.com
