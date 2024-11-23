@@ -14,7 +14,7 @@ spec:
       services:
         - name: argocd-server
           namespace: argocd
-          port: 443
+          port: 80
     - match: Host(`argocd.itlusions.nl`)
       kind: Rule
       services:
