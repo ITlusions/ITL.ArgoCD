@@ -4,9 +4,6 @@ metadata:
   name: {{ .Release.Name }}-ingressroute
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-issuer"
-    # Uncomment the following lines if using a different ingress controller
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
 spec:
   entryPoints:
     - web
@@ -15,14 +12,14 @@ spec:
     - match: Host(`argocd.itlusions.com`)
       kind: Rule
       services:
-        - name: itl-argocd-test
+        - name: argocd-server
           namespace: argocd
-          port: 8000
+          port: 443
     - match: Host(`argocd.itlusions.nl`)
       kind: Rule
       services:
-        - name: itl-argocd-test
+        - name: argocd-server
           namespace: argocd
-          port: 8000
+          port: 443
   tls:
     secretName: argocd-itlusions-com-tls
