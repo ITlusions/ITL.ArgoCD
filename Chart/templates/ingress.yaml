@@ -15,14 +15,14 @@ spec:
     - match: Host(`argocd.itlusions.com`)
       kind: Rule
       services:
-        - name: argocd-server
+        - name: {{ .Release.Name }}-argocd-test
           namespace: argocd
-          port: 80
+          port: 8000
     - match: Host(`argocd.itlusions.nl`)
       kind: Rule
       services:
-        - name: argocd-server
+        - name: {{ .Release.Name }}-argocd-test
           namespace: argocd
-          port: 80
+          port: 8000
   tls:
     secretName: argocd-itlusions-com-tls

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-argocd-test
+  labels:
+    app: {{ .Release.Name }}-argocd-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-argocd-test
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-argocd-test
+    spec:
+      containers:
+        - name: argocd-test
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
