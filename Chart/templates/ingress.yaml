@@ -24,10 +24,5 @@ spec:
         - name: argocd-server
           namespace: argocd
           port: 80
-#   tls:
-#     secretName: argocd-itlusions-com-tls
-#     domains:
-#     - main: argocd.itlusions.com 
-#       sans:
-#         - argocd.itlusions.nl
-    
+  tls:
+    secretName: argocd-itlusions-com-tls
