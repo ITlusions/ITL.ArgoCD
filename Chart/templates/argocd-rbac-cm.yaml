@@ -6,8 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-rbac-cm
     app.kubernetes.io/part-of: argocd
-  annotations:
-selfLink: /api/v1/namespaces/argocd/configmaps/argocd-rbac-cm
+
 data:
   policy.csv: |-
     p, role:readonly, applications, get, */*, allow
