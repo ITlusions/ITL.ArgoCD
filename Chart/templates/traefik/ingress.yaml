@@ -11,6 +11,8 @@ spec:
   routes:
     - match: Host(`argocd.dev.itlusions.com`)
       kind: Rule
+      middlewares:
+        - name: redirect-to-nl
       services:
         - name: argocd-server
           namespace: argocd

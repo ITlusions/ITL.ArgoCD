@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+ name: redirect-to-nl
+spec:
+ redirectRegex:
+   regex: ^https?://argocd\.dev\.itlusions\.com(.*)
+   replacement: https://argocd.dev.itlusions.nl$1
+   permanent: true
