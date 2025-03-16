@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: itl-minio-appset
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
+      directories:
+      - path: tenants/
+  template:
+    metadata:
+      name: '{{path.basename}}-s3-storage'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
+        targetRevision: main
+        chart: tenant
+        helm:
+          valueFiles:
+          - tenants/{{path.basename}}.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .Values.namespace | default "itl-minio-generic" }}'
