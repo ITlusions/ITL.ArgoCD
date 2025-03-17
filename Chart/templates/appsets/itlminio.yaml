@@ -8,29 +8,28 @@ spec:
       repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
       revision: main
       directories:
-      - path: "tenants/**/*.yaml"
-    template:
+      - path: tenants/*
+  template:
     metadata:
-        name: "{{.dir.basename}}"
+      name: "{{.path.basename}}"
     spec:
-        project: default
-        source:
+      project: default
+      source:
         repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
         targetRevision: main
         chart: tenant
-        path: .
+        path: '{{.path.path}}'
         helm:
-            valueFiles:
-            - "tenants/{{.dir.basename}}/values.yaml"
-        destination:
+          valueFiles:
+          - "tenants/{{.path.basename}}/values.yaml"
+      destination:
         server: https://kubernetes.default.svc
-        namespace: "{{.dir.basename}}"
-        syncPolicy:
+        namespace: "{{.path.basename}}"
+      syncPolicy:
         syncOptions:
         - CreateNamespace=true
         automated:
-            prune: true
-            selfHeal: true
-
+          prune: true
+          selfHeal: true
 
           
