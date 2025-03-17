@@ -18,7 +18,6 @@ spec:
         repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
         targetRevision: main
         chart: tenant
-        path: .
         helm:
           valueFiles:
           - "tenants/{{ .path | basename }}/values.yaml"
