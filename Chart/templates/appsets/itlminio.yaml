@@ -11,13 +11,14 @@ spec:
       - path: tenants/*
   template:
     metadata:
-      name: '{{ path.basename }}-s3-storage'
+      name: '{{.path.basename}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
         targetRevision: main
         chart: tenant
+        path: '.'
         helm:
           valueFiles:
           - 'tenants/{{ path.basename }}/values.yaml'
