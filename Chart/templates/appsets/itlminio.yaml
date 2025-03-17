@@ -11,7 +11,7 @@ spec:
       - path: tenants/*.yaml
   template:
     metadata:
-      name: '{{ .Values.tenant.name | default "itl-minio-generic-s3" }}'
+      name: '{{ path.basename | trimSuffix ".yaml" }}-s3-storage'
     spec:
       project: default
       source:
@@ -23,7 +23,7 @@ spec:
           - 'tenants/{{ path.basename }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ .Values.namespace | default "itl-minio-generic" }}'
+        namespace: '{{ path.basename | trimSuffix ".yaml" }}'
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
