@@ -6,11 +6,12 @@ spec:
   generators:
   - git:
       repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
-      directories:
-      - path: tenants/*
+      revision: main
+      files:
+      - path: tenants/*.yaml
   template:
     metadata:
-      name: '{{ path.basename }}-s3-storage'
+      name: '{{ path.basename | trimSuffix ".yaml" }}-s3-storage'
     spec:
       project: default
       source:
@@ -19,7 +20,11 @@ spec:
         chart: tenant
         helm:
           valueFiles:
-          - 'tenants/{{ path.basename }}.yaml'
+          - 'tenants/{{ path.basename }}'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{ .Values.namespace | default "itl-minio-generic" }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
