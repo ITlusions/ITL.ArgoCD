@@ -23,7 +23,7 @@ spec:
           - 'tenants/{{.path.basename}}/values.yaml'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ path.basename }}'
+        namespace: '{{.path.basename}}'
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
