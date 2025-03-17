@@ -18,13 +18,12 @@ spec:
         repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
         targetRevision: main
         chart: tenant
-        path: '.'
         helm:
           valueFiles:
-          - 'tenants/{{.path.basename}}/values.yaml'
+          - 'tenants/{{ path.basename }}/values.yaml'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{.path.basename }}'
+        namespace: '{{ path.basename }}'
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
