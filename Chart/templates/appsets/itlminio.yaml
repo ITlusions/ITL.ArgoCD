@@ -7,10 +7,10 @@ spec:
   - git:
       repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
       directories:
-      - path: tenants/
+      - path: tenants/*
   template:
     metadata:
-      name: '{{ .path.basename }}-s3-storage'
+      name: '{{ path.basename }}-s3-storage'
     spec:
       project: default
       source:
@@ -19,7 +19,7 @@ spec:
         chart: tenant
         helm:
           valueFiles:
-          - tenants/{{ .path.basename }}.yaml
+          - 'tenants/{{ path.basename }}.yaml'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{ .Values.namespace | default "itl-minio-generic" }}'
