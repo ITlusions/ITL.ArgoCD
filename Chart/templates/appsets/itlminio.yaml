@@ -7,11 +7,11 @@ spec:
   - git:
       repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
       revision: main
-      files:
-      - path: tenants/*.yaml
+      directories:
+      - path: tenants/*
   template:
     metadata:
-      name: '{{ path.basename | trimSuffix ".yaml" }}-s3-storage'
+      name: '{{ path.basename }}-s3-storage'
     spec:
       project: default
       source:
@@ -20,10 +20,10 @@ spec:
         chart: tenant
         helm:
           valueFiles:
-          - 'tenants/{{ path.basename }}'
+          - 'tenants/{{ path.basename }}/values.yaml'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ path.basename | trimSuffix ".yaml" }}'
+        namespace: '{{ path.basename }}'
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
