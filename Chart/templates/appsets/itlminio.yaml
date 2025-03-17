@@ -8,10 +8,10 @@ spec:
       repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
       revision: main
       directories:
-      - path: tenants/*
+      - path: "tenants/**/*.yaml"
   template:
     metadata:
-      name: '{{.path.basename}}'
+      name: "{{.path.basename}}"
     spec:
       project: default
       source:
@@ -21,10 +21,10 @@ spec:
         path: .
         helm:
           valueFiles:
-          - 'tenants/{{.path.basename}}/values.yaml'
+          - "tenants/{{.path.basename}}/values.yaml"
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{.path.basename}}'
+        namespace: "{{.path.basename}}"
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
