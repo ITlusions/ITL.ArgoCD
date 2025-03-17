@@ -1,32 +1,32 @@
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: itl-minio-appset
-spec:
-  generators:
-  - git:
-      repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
-      revision: main
-      directories:
-      - path: "tenants/*"
-  template:
-    metadata:
-      name: "{{ .path | basename }}"
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
-        targetRevision: main
-        chart: tenant
-        helm:
-          valueFiles:
-          - "tenants/{{ .path | basename }}/values.yaml"
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: "{{ .path | basename }}"
-      syncPolicy:
-        syncOptions:
-        - CreateNamespace=true
-        automated:
-          prune: true
-          selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: itl-minio-appset
+# spec:
+#   generators:
+#   - git:
+#       repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
+#       revision: main
+#       directories:
+#       - path: "tenants/*"
+#   template:
+#     metadata:
+#       name: "{{ .path | basename }}"
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/ITlusions/ITL.Minio.Tenant.git
+#         targetRevision: main
+#         chart: tenant
+#         helm:
+#           valueFiles:
+#           - "tenants/{{ .path | basename }}/values.yaml"
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: "{{ .path | basename }}"
+#       syncPolicy:
+#         syncOptions:
+#         - CreateNamespace=true
+#         automated:
+#           prune: true
+#           selfHeal: true
