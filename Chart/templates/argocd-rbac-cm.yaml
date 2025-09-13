@@ -62,6 +62,17 @@ data:
     g, ITlusions:Developers, role:developer
     g, ITlusions:Readonly, role:readonly
     
+    {{- if .Values.keycloak.enabled }}
+    # Map Keycloak groups/roles to ArgoCD roles
+    # Adjust these group names to match your Keycloak realm configuration
+    g, argocd-admins, role:admin
+    g, argocd-developers, role:developer
+    g, argocd-readonly, role:readonly
+    g, /argocd-admins, role:admin
+    g, /argocd-developers, role:developer
+    g, /argocd-readonly, role:readonly
+    {{- end }}
+    
     # Map local ArgoCD users to roles
     {{- if .Values.users }}
     {{- range .Values.users }}

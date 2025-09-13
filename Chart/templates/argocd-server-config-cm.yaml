@@ -20,6 +20,7 @@ data:
   # GitHub OAuth configuration via Dex
   dex.config: |
     connectors:
+      # GitHub OAuth connector
       - type: github
         id: github
         name: GitHub
@@ -29,6 +30,24 @@ data:
           orgs:
           - name: {{ .Values.github.organization }}
           redirectURI: {{ .Values.argocd.url }}/api/dex/callback
+      
+      {{- if .Values.keycloak.enabled }}
+      # Keycloak OIDC connector
+      - type: oidc
+        id: keycloak
+        name: Keycloak
+        config:
+          issuer: {{ .Values.keycloak.issuer }}
+          clientID: {{ .Values.keycloak.clientId }}
+          clientSecret: {{ .Values.keycloak.clientSecret }}
+          redirectURI: {{ .Values.keycloak.redirectURI | default (printf "%s/api/dex/callback" .Values.argocd.url) }}
+          scopes: {{ .Values.keycloak.scopes | default (list "openid" "profile" "email" "groups") | toJson }}
+          {{- if .Values.keycloak.groupsClaim }}
+          claimMapping:
+            groups: {{ .Values.keycloak.groupsClaim }}
+          {{- end }}
+          getUserInfo: true
+      {{- end }}
   
   # Timeout settings
   timeout.hard.reconciliation: 600s

@@ -8,6 +8,17 @@ github:
   clientSecret: "**REPLACE-WITH-YOUR-CLIENT-SECRET**"
   organization: "ITlusions"
 
+# Keycloak OAuth Configuration (via Dex)
+keycloak:
+  enabled: true
+  issuer: "https://your-keycloak-server.com/auth/realms/your-realm"
+  clientId: "**REPLACE-WITH-YOUR-KEYCLOAK-CLIENT-ID**"
+  clientSecret: "**REPLACE-WITH-YOUR-KEYCLOAK-CLIENT-SECRET**"
+  redirectURI: "https://argocd.dev.itlusions.nl/api/dex/callback"
+  # Optional: specify which groups/roles to map
+  # groupsClaim: "groups"
+  # scopes: ["openid", "profile", "email", "groups"]
+
 # UI Customization
 ui:
   bannerContent: "Managed by ITLusions"

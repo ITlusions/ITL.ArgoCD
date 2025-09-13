@@ -17,9 +17,15 @@ New to ArgoCD or need to get started quickly? Follow these steps:
 
 | Document | Description | When to Use |
 |----------|-------------|-------------|
+| **[Complete Authentication Guide](AUTHENTICATION_COMPLETE.md)** | Comprehensive guide covering all authentication providers, setup, and deployment | Primary reference for all authentication-related tasks |
 | **[CLI Login Guide](CLI_LOGIN.md)** | Complete CLI authentication methods | When you need to access ArgoCD from command line |
 | **[Token Management](TOKENS.md)** | API token generation and usage | For automation, CI/CD pipelines, and API access |
 | **[User Management](USER_MANAGEMENT.md)** | Local user configuration and management | When adding service accounts or automation users |
+
+### Reference Guides
+
+| Document | Description | When to Use |
+|----------|-------------|-------------|
 | **[GitHub Setup](GITHUB_SETUP.md)** | GitHub OAuth configuration details | For understanding or modifying GitHub integration |
 
 ### Configuration Reference
@@ -30,6 +36,12 @@ New to ArgoCD or need to get started quickly? Follow these steps:
 | `argocd-server-config-cm.yaml` | ArgoCD server configuration | `Chart/templates/` |
 | `argocd-rbac-cm.yaml` | Role-based access control | `Chart/templates/` |
 | `argocd-secret.yaml` | User passwords and secrets | `Chart/templates/` |
+
+### Deployment Guides
+
+| Document | Description | When to Use |
+|----------|-------------|-------------|
+| **[Complete Authentication Guide](AUTHENTICATION_COMPLETE.md)** | Includes comprehensive deployment procedures | Primary deployment reference for authentication setup |
 
 ## 🔐 Authentication Overview
 
