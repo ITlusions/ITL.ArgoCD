@@ -8,13 +8,13 @@ ArgoCD configuration chart for ITlusions infrastructure with GitHub OAuth integr
 
 ## 📚 Documentation
 
-**[📖 Complete Documentation](Chart/docs/index.md)** - Start here for comprehensive guides and examples
+**[📖 Complete Documentation](docs/index.md)** - Start here for comprehensive guides and examples
 
 ### Quick Links
-- **[🔐 CLI Login Guide](Chart/docs/CLI_LOGIN.md)** - Authentication methods for CLI and web UI
-- **[🎫 Token Management](Chart/docs/TOKENS.md)** - API token generation for automation
-- **[👥 User Management](Chart/docs/USER_MANAGEMENT.md)** - Local user configuration and management
-- **[🔗 GitHub Setup](Chart/docs/GITHUB_SETUP.md)** - GitHub OAuth configuration details
+- **[🔐 CLI Login Guide](docs/CLI_LOGIN.md)** - Authentication methods for CLI and web UI
+- **[🎫 Token Management](docs/TOKENS.md)** - API token generation for automation
+- **[👥 User Management](docs/USER_MANAGEMENT.md)** - Local user configuration and management
+- **[🔗 GitHub Setup](docs/GITHUB_SETUP.md)** - GitHub OAuth configuration details
 
 ## 🚀 Features
 
@@ -51,7 +51,7 @@ Your ArgoCD is currently configured with:
 - Kubernetes cluster with ArgoCD installed
 - Helm 3.x installed
 - kubectl configured for your cluster
-- GitHub OAuth app configured (see [GitHub Setup](Chart/docs/GITHUB_SETUP.md))
+- GitHub OAuth app configured (see [GitHub Setup](docs/GITHUB_SETUP.md))
 
 ### 1. Configure Secrets
 Update `Chart/values.yaml` with your GitHub OAuth credentials:
@@ -109,21 +109,27 @@ kubectl get secret argocd-secret -n argocd -o jsonpath='{.data.automation\.passw
 
 ```
 ITL.ArgoCD/
-├── 📄 README.md                    # This file
-├── 📁 Chart/                       # Helm chart
-│   ├── 📄 Chart.yaml              # Chart metadata  
-│   ├── 📄 values.yaml             # Configuration values
-│   ├── 📁 templates/              # Helm templates
-│   │   ├── argocd-server-config-cm.yaml
-│   │   ├── argocd-rbac-cm.yaml
-│   │   ├── argocd-secret.yaml
-│   │   └── _helpers.tpl
-│   └── 📁 docs/                   # Documentation
-│       ├── 📄 index.md            # Documentation hub
-│       ├── 📄 CLI_LOGIN.md        # CLI authentication
-│       ├── 📄 TOKENS.md           # API token management
-│       ├── 📄 USER_MANAGEMENT.md  # User configuration
-│       └── 📄 GITHUB_SETUP.md     # GitHub OAuth setup
+├── 📄 README.md                      # This file
+├── 📁 docs/                          # Documentation
+│   ├── 📄 index.md                  # Documentation hub
+│   ├── 📄 CLI_LOGIN.md              # CLI authentication
+│   ├── 📄 TOKENS.md                 # API token management
+│   ├── 📄 USER_MANAGEMENT.md        # User configuration
+│   └── 📄 GITHUB_SETUP.md           # GitHub OAuth setup
+└── 📁 Chart/                        # Helm chart
+    ├── 📄 Chart.yaml                # Chart metadata  
+    ├── 📄 values.yaml               # Configuration values
+    ├── 📁 templates/                # Helm templates
+    │   ├── 📄 argocd-server-config-cm.yaml  # Main ArgoCD config
+    │   ├── 📄 argocd-rbac-cm.yaml           # RBAC policies
+    │   ├── 📄 argocd-secret.yaml            # User passwords
+    │   ├── 📄 argocd-cmd-params-cm.yaml     # Server parameters
+    │   ├── 📄 certificate.yaml              # TLS certificate
+    │   └── 📁 traefik/                      # Traefik ingress
+    │       ├── 📄 ingress.yaml              # Main ingress
+    │       └── 📄 redirect-nl.yaml          # Redirect rules
+    └── � appsets/                          # Application sets
+        └── 📄 itlminio.disabled             # Disabled MinIO app
 ```
 
 ## ⚙️ Configuration Examples
@@ -224,7 +230,7 @@ kubectl logs deployment/argocd-server -n argocd
 - **Local user can't login**: Verify user exists in ConfigMap and secret
 - **Token doesn't work**: Check token format and account permissions
 
-See [Documentation](Chart/docs/index.md) for detailed troubleshooting guides.
+See [Documentation](docs/index.md) for detailed troubleshooting guides.
 
 ## 🤝 Contributing
 
@@ -242,7 +248,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Documentation**: [Chart/docs/index.md](Chart/docs/index.md)
+- **Documentation**: [docs/index.md](docs/index.md)
 - **Issues**: Create an issue in this repository
 - **ITlusions Internal**: Contact the DevOps team
 
