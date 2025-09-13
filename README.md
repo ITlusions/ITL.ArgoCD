@@ -2,13 +2,28 @@
 
 ArgoCD configuration chart for ITlusions infrastructure with GitHub OAuth integration and local user management.
 
-## Features
+[![Helm](https://img.shields.io/badge/Helm-v3-blue)](https://helm.sh/)
+[![ArgoCD](https://img.shields.io/badge/ArgoCD-v2.x-green)](https://argo-cd.readthedocs.io/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-- **GitHub OAuth Authentication**: Integrates with GitHub for user authentication via Dex
-- **Local User Management**: Support for local ArgoCD users with auto-generated passwords
-- **Role-Based Access Control (RBAC)**: Fine-grained permissions based on GitHub teams and local roles
-- **API Token Support**: Generate tokens for automation and CI/CD pipelines
-- **Secure Configuration**: Proper OAuth app configuration with encrypted secrets
+## 📚 Documentation
+
+**[📖 Complete Documentation](Chart/docs/index.md)** - Start here for comprehensive guides and examples
+
+### Quick Links
+- **[🔐 CLI Login Guide](Chart/docs/CLI_LOGIN.md)** - Authentication methods for CLI and web UI
+- **[🎫 Token Management](Chart/docs/TOKENS.md)** - API token generation for automation
+- **[👥 User Management](Chart/docs/USER_MANAGEMENT.md)** - Local user configuration and management
+- **[🔗 GitHub Setup](Chart/docs/GITHUB_SETUP.md)** - GitHub OAuth configuration details
+
+## 🚀 Features
+
+- **🔒 GitHub OAuth Authentication**: SSO integration via Dex for ITlusions organization members
+- **👥 Local User Management**: Automated service accounts with secure password generation
+- **🛡️ Role-Based Access Control**: Fine-grained permissions based on GitHub teams and local roles
+- **🔑 API Token Support**: Secure token generation for automation and CI/CD pipelines
+- **⚡ Auto-Configuration**: Template-based setup with sensible defaults
+- **🎨 UI Customization**: Branded interface with ITlusions styling
 
 ## Current Configuration
 
@@ -30,90 +45,210 @@ Your ArgoCD is currently configured with:
 - **Service accounts** with specific role assignments
 - **Auto-generated passwords** for security
 
-## Quick Start
+## ⚡ Quick Start
 
-1. **Configure Users** in `values.yaml`:
-   ```yaml
-   users:
-     - name: "automation"
-       capabilities: "apiKey"
-       role: "admin"
-       # Password auto-generated if not specified
-   ```
+### Prerequisites
+- Kubernetes cluster with ArgoCD installed
+- Helm 3.x installed
+- kubectl configured for your cluster
+- GitHub OAuth app configured (see [GitHub Setup](Chart/docs/GITHUB_SETUP.md))
 
-2. **Deploy**:
-   ```bash
-   helm upgrade --install argocd-config ./Chart -n argocd
-   ```
-
-3. **Get Auto-Generated Passwords**:
-   ```bash
-   kubectl get secret argocd-secret -n argocd -o jsonpath='{.data.automation\.password}' | base64 -d
-   ```
-
-4. **Restart ArgoCD** (if needed):
-   ```bash
-   kubectl rollout restart deployment/argocd-server -n argocd
-   kubectl rollout restart deployment/argocd-dex-server -n argocd
-   ```
-
-## Authentication Methods
-
-### GitHub OAuth Flow
-1. User visits ArgoCD UI
-2. Clicks "LOG IN VIA GITHUB"
-3. Redirected to GitHub for OAuth authentication
-4. After successful login, user is redirected back to ArgoCD via Dex
-5. ArgoCD validates the OAuth token and maps user teams to roles
-6. User gains access based on their team membership in the ITlusions organization
-
-### Local User Login
-1. Login directly with username/password
-2. Access level determined by configured role
-3. Ideal for automation and service accounts
-
-## Access Control
-
-### GitHub Team to Role Mapping
-
-| GitHub Team | ArgoCD Role | Description |
-|-------------|-------------|-------------|
-| `ITlusions:Admins` | `admin` | Full administrative access |
-| `ITlusions:Devops` | `admin` | Full administrative access |
-| `ITlusions:Developers` | `developer` | Application deployment and sync |
-| `ITlusions:Readonly` | `readonly` | Read-only access |
-
-### Local User Configuration
-
-Local users are defined in `values.yaml` with flexible role assignment:
+### 1. Configure Secrets
+Update `Chart/values.yaml` with your GitHub OAuth credentials:
 
 ```yaml
-users:
-  - name: "automation"
-    capabilities: "apiKey"      # API-only access
-    role: "admin"              # Full permissions
-  - name: "ci-system"
-    capabilities: "apiKey,login" # API + login access  
-    role: "developer"           # Limited permissions
+github:
+  clientId: "your-github-oauth-client-id"
+  clientSecret: "your-github-oauth-client-secret"
+  organization: "ITlusions"
 ```
 
-## Documentation
+### 2. Deploy Configuration
+```bash
+# Navigate to chart directory
+cd Chart
 
-- **[CLI_LOGIN.md](./CLI_LOGIN.md)** - CLI authentication methods
-- **[TOKENS.md](./TOKENS.md)** - API token generation and usage
-- **[GITHUB_SETUP.md](./GITHUB_SETUP.md)** - GitHub OAuth configuration
+# Deploy with Helm
+helm upgrade --install argocd-config . -n argocd
 
-## Files Structure
+# Verify deployment
+kubectl get pods -n argocd
+```
 
-- `Chart/values.yaml` - Configuration values
-- `Chart/templates/argocd-server-config-cm.yaml` - Main ArgoCD configuration (argocd-cm)
-- `Chart/templates/argocd-rbac-cm.yaml` - RBAC policies
-- `Chart/templates/argocd-secret.yaml` - Secret management (optional)
-- `Chart/templates/argocd-cmd-params-cm.yaml` - Server parameters
-- `GITHUB_SETUP.md` - Detailed GitHub OAuth configuration guide
+### 3. Access ArgoCD
+- **Web UI**: https://argocd.dev.itlusions.nl
+- **CLI Login**: `argocd login argocd.dev.itlusions.nl --grpc-web --sso`
 
-## Security Notes
+### 4. Get Automation Passwords (if using local users)
+```bash
+kubectl get secret argocd-secret -n argocd -o jsonpath='{.data.automation\.password}' | base64 -d
+```
 
-- GitHub OAuth client secret is currently stored in the ConfigMap
-- Consider moving sensitive data to Kubernetes Secrets for better security
-- Ensure proper team membership management in GitHub organization
+## 🔐 Authentication Overview
+
+### GitHub OAuth Users (Primary)
+- **Who**: ITlusions organization members
+- **Access**: SSO through GitHub with team-based roles
+- **Login**: Web UI + CLI with browser authentication
+
+### Local ArgoCD Users (Automation)
+- **Who**: Service accounts, CI/CD systems, automation scripts
+- **Access**: API tokens with auto-generated secure passwords
+- **Login**: API-only access for programmatic operations
+
+## 🎯 User Roles & Permissions
+
+| User Type | GitHub Team | ArgoCD Role | Web UI | CLI | API | Permissions |
+|-----------|-------------|-------------|--------|-----|-----|-------------|
+| **GitHub Admin** | `ITlusions:Admins`, `ITlusions:Devops` | `admin` | ✅ | ✅ | ✅ | Full access |
+| **GitHub Developer** | `ITlusions:Developers` | `developer` | ✅ | ✅ | ✅ | App management |
+| **GitHub Readonly** | `ITlusions:Readonly` | `readonly` | ✅ | ✅ | ✅ | View only |
+| **Local Automation** | N/A | `admin` | ❌ | ❌ | ✅ | API automation |
+
+## 📁 Repository Structure
+
+```
+ITL.ArgoCD/
+├── 📄 README.md                    # This file
+├── 📁 Chart/                       # Helm chart
+│   ├── 📄 Chart.yaml              # Chart metadata  
+│   ├── 📄 values.yaml             # Configuration values
+│   ├── 📁 templates/              # Helm templates
+│   │   ├── argocd-server-config-cm.yaml
+│   │   ├── argocd-rbac-cm.yaml
+│   │   ├── argocd-secret.yaml
+│   │   └── _helpers.tpl
+│   └── 📁 docs/                   # Documentation
+│       ├── 📄 index.md            # Documentation hub
+│       ├── 📄 CLI_LOGIN.md        # CLI authentication
+│       ├── 📄 TOKENS.md           # API token management
+│       ├── 📄 USER_MANAGEMENT.md  # User configuration
+│       └── 📄 GITHUB_SETUP.md     # GitHub OAuth setup
+```
+
+## ⚙️ Configuration Examples
+
+### Basic Configuration
+```yaml
+# Chart/values.yaml
+argocd:
+  url: "https://argocd.dev.itlusions.nl"
+
+github:
+  clientId: "your-client-id"
+  clientSecret: "your-client-secret"  
+  organization: "ITlusions"
+
+users:
+  - name: "automation"
+    capabilities: "apiKey"
+    role: "admin"
+    # Password auto-generated (64 characters)
+```
+
+### Advanced Configuration
+```yaml
+# Chart/values.yaml with multiple users
+users:
+  - name: "ci-pipeline"
+    capabilities: "apiKey"
+    role: "developer"
+    
+  - name: "monitoring"
+    capabilities: "apiKey"
+    role: "readonly"
+    
+  - name: "emergency-access"
+    capabilities: "apiKey,login"
+    password: "CustomPassword123!"
+    role: "admin"
+
+ui:
+  bannerContent: "Managed by ITLusions"
+  bannerPermanent: "false"
+  bannerPosition: "top"
+  bannerUrl: "https://www.itlusions.com"
+```
+
+## 🛠️ Common Operations
+
+### Deploy Configuration Changes
+```bash
+# Apply configuration updates
+helm upgrade argocd-config Chart/ -n argocd
+
+# Restart ArgoCD components (if needed)
+kubectl rollout restart deployment/argocd-server -n argocd
+kubectl rollout restart deployment/argocd-dex-server -n argocd
+```
+
+### Get User Passwords
+```bash
+# Get automation user password
+kubectl get secret argocd-secret -n argocd -o jsonpath='{.data.automation\.password}' | base64 -d
+
+# List all user passwords
+kubectl get secret argocd-secret -n argocd -o json | jq -r '.data | to_entries[] | select(.key | endswith(".password")) | "\(.key): \(.value | @base64d)"'
+```
+
+### Generate API Tokens
+```bash
+# Login as automation user
+argocd login argocd.dev.itlusions.nl --grpc-web --username automation --password <password>
+
+# Generate API token
+argocd account generate-token --id ci-cd-token
+
+# Use token for automation
+export ARGOCD_AUTH_TOKEN="your-token-here"
+argocd app sync my-app --server argocd.dev.itlusions.nl --grpc-web
+```
+
+## 🔍 Troubleshooting
+
+### Check Configuration
+```bash
+# Verify ArgoCD configuration
+kubectl get cm argocd-cm -n argocd -o yaml
+
+# Check RBAC settings
+kubectl get cm argocd-rbac-cm -n argocd -o yaml
+
+# View ArgoCD logs
+kubectl logs deployment/argocd-server -n argocd
+```
+
+### Common Issues
+- **GitHub login fails**: Check team membership in ITlusions organization
+- **CLI authentication fails**: Use `--grpc-web` flag and verify server URL
+- **Local user can't login**: Verify user exists in ConfigMap and secret
+- **Token doesn't work**: Check token format and account permissions
+
+See [Documentation](Chart/docs/index.md) for detailed troubleshooting guides.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes
+4. Test the configuration: `helm template Chart/ --debug`
+5. Commit your changes: `git commit -am 'Add new feature'`
+6. Push to the branch: `git push origin feature/your-feature`
+7. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [Chart/docs/index.md](Chart/docs/index.md)
+- **Issues**: Create an issue in this repository
+- **ITlusions Internal**: Contact the DevOps team
+
+---
+
+**Maintained by**: ITlusions DevOps Team  
+**Last Updated**: September 13, 2025  
+**ArgoCD Version**: Compatible with v2.x  
+**Helm Version**: Requires v3.x+
