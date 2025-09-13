@@ -9,15 +9,25 @@ metadata:
 
 data:
   policy.csv: |-
+    # Define roles and their permissions
+    
+    # Read-only role - can view applications and logs
     p, role:readonly, applications, get, */*, allow
     p, role:readonly, logs, get, */*, allow
     p, role:readonly, applications, action/apps/Deployment/restart, */*, allow
-    p, role:org-admin, applications, *, */*, allow
-    p, role:org-admin, clusters, get, *, allow
-    p, role:org-admin, repositories, get, *, allow
-    p, role:org-admin, repositories, create, *, allow
-    p, role:org-admin, repositories, update, *, allow
-    p, role:org-admin, repositories, delete, *, allow
+    p, role:readonly, clusters, get, *, allow
+    p, role:readonly, repositories, get, *, allow
+    
+    # Developer role - can manage applications but not infrastructure
+    p, role:developer, applications, get, */*, allow
+    p, role:developer, applications, sync, */*, allow
+    p, role:developer, applications, action/apps/Deployment/restart, */*, allow
+    p, role:developer, applications, action/apps/ReplicaSet/restart, */*, allow
+    p, role:developer, logs, get, */*, allow
+    p, role:developer, clusters, get, *, allow
+    p, role:developer, repositories, get, *, allow
+    
+    # Admin role - full access to applications and infrastructure
     p, role:admin, applications, get, */*, allow
     p, role:admin, applications, update, */*, allow
     p, role:admin, applications, delete, */*, allow
@@ -29,7 +39,40 @@ data:
     p, role:admin, projects, get, *, allow
     p, role:admin, repositories, get, *, allow
     p, role:admin, certificates, get, *, allow
+    p, role:admin, tokens, create, *, allow
+    
+    # Organization admin role - full access to everything
+    p, role:org-admin, applications, *, */*, allow
+    p, role:org-admin, clusters, get, *, allow
+    p, role:org-admin, repositories, get, *, allow
+    p, role:org-admin, repositories, create, *, allow
+    p, role:org-admin, repositories, update, *, allow
+    p, role:org-admin, repositories, delete, *, allow
+    p, role:org-admin, certificates, *, *, allow
+    p, role:org-admin, projects, *, *, allow
+    p, role:org-admin, accounts, *, *, allow
+    p, role:org-admin, gpgkeys, *, *, allow
+    
+    # Map GitHub organization teams to ArgoCD roles
+    # Current working mappings from your cluster
     g, ITlusions:Admins, role:admin
     g, ITlusions:Devops, role:admin
+    
+    # Additional team mappings (add as needed)
+    g, ITlusions:Developers, role:developer
+    g, ITlusions:Readonly, role:readonly
+    
+    # Map local ArgoCD users to roles
+    {{- if .Values.users }}
+    {{- range .Values.users }}
+    {{- if .role }}
+    g, {{ .name }}, role:{{ .role }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+
+  # Default policy for users without specific group membership
   policy.default: role:readonly
+  
+  # Scopes to request from GitHub (via Dex)
   scopes: '[groups, group, email]'

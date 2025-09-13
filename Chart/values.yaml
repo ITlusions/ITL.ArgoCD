@@ -1,3 +1,32 @@
+# ArgoCD Configuration
+argocd:
+  url: "https://argocd.dev.itlusions.nl"
+
+# GitHub OAuth Configuration (via Dex)
+github:
+  clientId: "**REPLACE-WITH-YOUR-CLIENT-ID**"
+  clientSecret: "**REPLACE-WITH-YOUR-CLIENT-SECRET**"
+  organization: "ITlusions"
+
+# UI Customization
+ui:
+  bannerContent: "Managed by ITLusions"
+  bannerPermanent: "false"
+  bannerPosition: "top"
+  bannerUrl: "https://www.itlusions.com"
+
+# Admin Configuration (optional - for fallback access)
+admin:
+  # Set to empty to disable local admin user, or provide password
+  password: ""
+
+# Additional ArgoCD Users
+users:
+  - name: "automation"
+    capabilities: "apiKey"
+    role: "admin"
+
+# Legacy nginx config (if needed for other purposes)
 image:
   repository: nginx
   tag: latest

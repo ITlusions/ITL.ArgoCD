@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # Admin account configuration
+  accounts.admin: apiKey, login
+  
+  # Additional local user accounts
+  {{- if .Values.users }}
+  {{- range .Values.users }}
+  accounts.{{ .name }}: {{ .capabilities | default "login" }}
+  {{- end }}
+  {{- end }}
+  
+  # GitHub OAuth configuration via Dex
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: {{ .Values.github.clientId }}
+          clientSecret: {{ .Values.github.clientSecret }}
+          orgs:
+          - name: {{ .Values.github.organization }}
+          redirectURI: {{ .Values.argocd.url }}/api/dex/callback
+  
+  # Timeout settings
+  timeout.hard.reconciliation: 600s
+  timeout.reconciliation: 300s
+  
+  # UI customization
+  ui.bannercontent: {{ .Values.ui.bannerContent | default "Managed by ITLusions" }}
+  ui.bannerpermanent: {{ .Values.ui.bannerPermanent | default "false" | quote }}
+  ui.bannerposition: {{ .Values.ui.bannerPosition | default "top" }}
+  ui.bannerurl: {{ .Values.ui.bannerUrl | default "https://www.itlusions.com" }}
+  
+  # ArgoCD URL
+  url: {{ .Values.argocd.url }}
